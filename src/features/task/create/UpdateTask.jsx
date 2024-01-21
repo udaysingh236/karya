@@ -1,65 +1,32 @@
 import { useState } from "react";
-import { Form, useParams } from "react-router-dom";
+import { Form, redirect, useNavigate, useParams } from "react-router-dom";
 import Input from "../../../ui/Input";
-
-const task = {
-  id: "1223",
-  taskName: "React Study",
-  createdOn: "14-01-2024",
-  createdBy: "Uday",
-  updatedAt: "14-01-2024",
-  taskDate: "2024-01-20",
-  everyDayTask: false,
-  taskStatus: "open",
-  description: "What we need to buy next ?",
-  items: [
-    {
-      itemName: "Oil",
-      description: "Dhara oil - 2 lit",
-    },
-    {
-      itemName: "Anjeer",
-      description: "",
-    },
-    {
-      itemName: "Oil",
-      description: "Dhara oil - 2 lit",
-    },
-    {
-      itemName: "Anjeer",
-      description: "",
-    },
-    {
-      itemName: "Oil",
-      description: "Dhara oil - 2 lit",
-    },
-    {
-      itemName: "Anjeer",
-      description: "",
-    },
-  ],
-};
+import { useSelector } from "react-redux";
+import { updateTaskInDb } from "../../../services/apiTask";
+import { routeNames } from "../../../utils/RouteNames";
 
 function UpdateTask() {
-  const taskId = useParams();
-  console.log(taskId);
+  const { taskId } = useParams();
+  const navigate = useNavigate();
+  const task = useSelector(
+    (state) =>
+      state.task.tasks.filter((task) => task.id === parseInt(taskId))[0],
+  );
   const [taskItems, setTaskItems] = useState(task.items);
-  const [checked, setChecked] = useState(task.everyDayTask);
+  const [checked, setChecked] = useState(task.every_day_task);
   function handleItemNameFormChange(e, index) {
-    e.preventDefault();
-    setTaskItems((items) => {
+    setTaskItems((items) =>
       items.map((item, i) =>
-        index === i ? (item.itemName = e.target.value) : item.itemName,
-      );
-    });
+        i === index ? { ...item, itemName: e.target.value } : item,
+      ),
+    );
   }
   function handledescriptionFormChange(e, index) {
-    e.preventDefault();
-    setTaskItems((items) => {
+    setTaskItems((items) =>
       items.map((item, i) =>
-        index === i ? (item.description = e.target.value) : item.description,
-      );
-    });
+        i === index ? { ...item, description: e.target.value } : item,
+      ),
+    );
   }
 
   function removeItem(index) {
@@ -83,9 +50,9 @@ function UpdateTask() {
   return (
     <div className="p-2">
       <h2 className="text-center text-xl font-medium">
-        Got a task ? Let's go!
+        Soemthing got missed last time ?
       </h2>
-      <Form className="mt-4 space-y-4">
+      <Form className="mt-4 space-y-4" method="PATCH">
         <div>
           <label htmlFor="taskName" className="text-lg">
             Task Name
@@ -93,9 +60,10 @@ function UpdateTask() {
           <input
             className="w-full rounded-lg p-1 text-lg shadow-md focus:outline-none focus-visible:outline-none"
             type="text"
-            name="taskName"
+            name="task_name"
             id="taskName"
-            defaultValue={task.taskName}
+            defaultValue={task.task_name}
+            required
           />
         </div>
         <div>
@@ -105,9 +73,10 @@ function UpdateTask() {
           <input
             type="text"
             className="w-full rounded-lg p-1 text-lg shadow-md focus:outline-none focus-visible:outline-none"
-            name="taskDes"
+            name="task_desc"
             id="taskDes"
-            defaultValue={task.description}
+            defaultValue={task.task_desc}
+            required
           />
         </div>
         <div>
@@ -125,11 +94,11 @@ function UpdateTask() {
               }
               defaultValue={
                 !checked
-                  ? `${new Date(task.taskDate).toLocaleDateString("en-CA")}`
+                  ? `${new Date(task.task_date).toLocaleDateString("en-CA")}`
                   : ""
               }
               min={!checked ? new Date().toLocaleDateString("en-CA") : ""}
-              name="taskDate"
+              name="task_date"
               id="taskDate"
             />
 
@@ -137,8 +106,9 @@ function UpdateTask() {
               <input
                 type="checkbox"
                 id="everyDay"
-                name="everyDay"
+                name="every_day_task"
                 value={checked}
+                defaultChecked={checked}
                 onChange={handleCheckChange}
               />
               <label htmlFor="everyDay">Mark everyday until closed</label>
@@ -147,14 +117,14 @@ function UpdateTask() {
         </div>
         <div>
           <label htmlFor="" className="text-lg font-medium">
-            Your task items please! 😎{" "}
+            Your task items😎
           </label>
         </div>
         <div>
           <div className="space-y-2">
             {taskItems.map((item, index) => {
               return (
-                <div className="space-y-1 rounded-lg border p-2">
+                <div className="space-y-1 rounded-lg border p-2" key={index}>
                   <div className="flex items-center justify-between">
                     <label htmlFor="" className="font-Pacifico">
                       Task item: {index + 1}
@@ -203,6 +173,7 @@ function UpdateTask() {
           </div>
           <div className="mt-2 flex items-center justify-start">
             <button
+              type="button"
               onClick={addItem}
               className="rounded-3xl border px-2 py-1 text-sm text-waikawa-gray-600"
             >
@@ -210,17 +181,52 @@ function UpdateTask() {
             </button>
           </div>
         </div>
-        <div className="mt-2 flex items-center justify-center">
+        <input
+          type="hidden"
+          name="taskItems"
+          value={JSON.stringify(taskItems)}
+        />
+        <div className="mt-2 flex items-center justify-center gap-6">
           <button
             type="submit"
-            className="rounded-3xl bg-portage-700  px-2 py-1 text-lg text-waikawa-gray-50"
+            className="rounded-3xl bg-portage-700  px-3 py-2 text-lg text-waikawa-gray-50"
           >
             Submit
+          </button>
+          <button
+            type="button"
+            className="rounded-3xl bg-portage-950  px-3 py-2 text-lg text-waikawa-gray-50"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            Cancel
           </button>
         </div>
       </Form>
     </div>
   );
+}
+
+export async function action({ request, params }) {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData);
+
+  const taskItems = JSON.parse(data.taskItems);
+
+  const task = {
+    task_name: data.task_name,
+    task_desc: data.task_desc,
+    task_date: data.every_day_task === "true" ? "2099-12-31" : data.task_date,
+    created_by: "Uday",
+    every_day_task: data.every_day_task === "true",
+    is_open: true,
+    items: taskItems.filter((item) => item.itemName.length > 0),
+  };
+
+  // If all ok, insert in DB
+  await updateTaskInDb(task, params.taskId);
+  return redirect(routeNames.home);
 }
 
 export default UpdateTask;

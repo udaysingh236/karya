@@ -1,14 +1,17 @@
 import { useState } from "react";
 import Button from "../../../ui/Button";
 import { useNavigate } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
+import { updateTaskName } from "../taskSlice";
+import { routeNames } from "../../../utils/RouteNames";
 function CreateTaskHome() {
   const [taskName, setTaskName] = useState("");
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(taskName);
-    navigate("/task/new");
+    dispatch(updateTaskName(taskName));
+    navigate(routeNames.createTask);
   }
 
   return (

@@ -1,17 +1,48 @@
 import Header from "./Header";
 import Footer from "./Footer";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { routeNames } from "../utils/RouteNames";
+import { useEffect } from "react";
+import supabase from "../services/supabase";
+import {
+  insertEmail,
+  insertUserName,
+  updateAuthnticate,
+} from "../features/user/userSlice";
 function AppLayout() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  useEffect(() => {
+    async function getSessionInfo() {
+      console.log("in useeffect");
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+      if (error || !session) {
+        navigate(routeNames.login);
+      } else {
+        dispatch(updateAuthnticate(true));
+        dispatch(insertEmail(session.user.email));
+        dispatch(insertUserName(session.user.user_metadata.displayName));
+      }
+    }
+    getSessionInfo();
+  }, [dispatch, navigate]);
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   return (
-    <div className="mx-auto grid h-dvh  max-w-md grid-rows-[auto_1fr_auto]  bg-gradient-to-b from-waikawa-gray-100 to-waikawa-gray-50 p-4">
-      <Header />
-      <div className="overflow-scroll">
-        <main>
-          <Outlet />
-        </main>
+    isAuthenticated && (
+      <div className="mx-auto grid h-dvh  max-w-md grid-rows-[auto_1fr_auto]  bg-gradient-to-b from-waikawa-gray-100 to-waikawa-gray-50 p-4 transition-all delay-300 ease-in-out">
+        <Header />
+        <div className="overflow-scroll">
+          <main>
+            <Outlet />
+          </main>
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    )
   );
 }
 

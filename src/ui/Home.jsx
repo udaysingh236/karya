@@ -1,9 +1,13 @@
-import SearchTask from "../features/task/show/SearchTask";
+import { Outlet } from "react-router-dom";
 import CreateTaskHome from "../features/task/create/CreateTaskHome";
+import { useSelector } from "react-redux";
 function Home() {
+  const userName = useSelector((state) => state.user.userName);
   return (
     <div className="my-2">
-      <h1 className="text-xl font-semibold text-portage-950">Hello, User</h1>
+      <h1 className="text-xl font-semibold text-portage-950">
+        Hello, {userName}
+      </h1>
       <p className="text-base">What are you going to do ?</p>
       <div className="mb-4 mt-2">
         <CreateTaskHome />
@@ -12,7 +16,7 @@ function Home() {
         Today's tasks - {new Date().toDateString()}
       </p>
       <div className="">
-        <SearchTask />
+        <Outlet />
       </div>
     </div>
   );

@@ -25,7 +25,10 @@ function Button({ children, type, to, onClick }) {
   if (type === "secondry") {
     return (
       <div>
-        <button className="rounded-full border-2 border-waikawa-gray-700  px-2 py-2 text-sm text-waikawa-gray-700">
+        <button
+          className="rounded-full border-2 border-waikawa-gray-700  px-2 py-2 text-sm text-waikawa-gray-700 hover:bg-waikawa-gray-300 active:bg-waikawa-gray-200"
+          onClick={onClick}
+        >
           {children}
         </button>
       </div>
@@ -46,7 +49,10 @@ function Button({ children, type, to, onClick }) {
   if (type === "tertiary") {
     return (
       <div>
-        <button className="rounded-full bg-portage-900  px-4 py-2 text-base font-medium text-waikawa-gray-50">
+        <button
+          className="rounded-full bg-portage-900  px-4 py-2 text-base font-medium text-waikawa-gray-50"
+          onClick={onClick}
+        >
           {children}
         </button>
       </div>

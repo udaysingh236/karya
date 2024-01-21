@@ -1,25 +1,32 @@
 import { useState } from "react";
-import { Form } from "react-router-dom";
+import { Form, redirect, useActionData } from "react-router-dom";
 import Input from "../../../ui/Input";
+import { useSelector } from "react-redux";
+import FormError from "../../../ui/FormError";
+import ToogleComponent from "../../../ui/ToogleComponent";
+import { insertTaskInDb } from "../../../services/apiTask";
+import { routeNames } from "../../../utils/RouteNames";
 
 function CreateTask() {
-  const [taskItems, setTaskItems] = useState([{ itemName: "", itemDes: "" }]);
+  const [taskItems, setTaskItems] = useState([
+    { itemName: "", description: "" },
+  ]);
   const [checked, setChecked] = useState(false);
+  const taskName = useSelector((state) => state.task.createTaskName);
+  const formError = useActionData();
   function handleItemNameFormChange(e, index) {
-    e.preventDefault();
-    setTaskItems((items) => {
+    setTaskItems((items) =>
       items.map((item, i) =>
-        index === i ? (item.itemName = e.target.value) : item.itemName,
-      );
-    });
+        i === index ? { ...item, itemName: e.target.value } : item,
+      ),
+    );
   }
   function handleItemDesFormChange(e, index) {
-    e.preventDefault();
-    setTaskItems((items) => {
+    setTaskItems((items) =>
       items.map((item, i) =>
-        index === i ? (item.itemDes = e.target.value) : item.itemDes,
-      );
-    });
+        i === index ? { ...item, description: e.target.value } : item,
+      ),
+    );
   }
 
   function removeItem(index) {
@@ -32,20 +39,20 @@ function CreateTask() {
     setTaskItems((items) =>
       items.concat({
         itemName: "",
-        itemDes: "",
+        description: "",
       }),
     );
   }
 
-  function handleCheckChange() {
-    setChecked(!checked);
+  function handleCheckChange(e) {
+    setChecked(e.target.checked);
   }
   return (
     <div className="p-2">
       <h2 className="text-center text-xl font-medium">
         Got a task ? Let's go!
       </h2>
-      <Form className="mt-4 space-y-4">
+      <Form className="mt-4 space-y-4" method="POST">
         <div>
           <label htmlFor="taskName" className="text-lg">
             Task Name
@@ -53,10 +60,18 @@ function CreateTask() {
           <input
             className="w-full rounded-lg p-1 text-lg shadow-md focus:outline-none focus-visible:outline-none"
             type="text"
-            name="taskName"
+            name="task_name"
             id="taskName"
-            defaultValue="Upcoming Grow"
+            defaultValue={taskName}
+            required
           />
+          {formError?.taskNameErr && (
+            <ToogleComponent timeOut={2000}>
+              <FormError clsNames="bg-guardsman-red-100 text-guardsman-red-900 mt-2  rounded-md p-1 text-xs">
+                {formError.taskNameErrMsg}
+              </FormError>
+            </ToogleComponent>
+          )}
         </div>
         <div>
           <label htmlFor="taskDes" className="text-lg">
@@ -65,9 +80,17 @@ function CreateTask() {
           <input
             type="text"
             className="w-full rounded-lg p-1 text-lg shadow-md focus:outline-none focus-visible:outline-none"
-            name="taskDes"
+            name="task_desc"
             id="taskDes"
+            required
           />
+          {formError?.taskDescErr && (
+            <ToogleComponent timeOut={2000}>
+              <FormError clsNames="bg-guardsman-red-100 text-guardsman-red-900 mt-2  rounded-md p-1 text-xs">
+                {formError.taskDescErrMsg}
+              </FormError>
+            </ToogleComponent>
+          )}
         </div>
         <div>
           <label htmlFor="taskDate" className="text-lg">
@@ -86,7 +109,7 @@ function CreateTask() {
                 !checked ? new Date().toLocaleDateString("en-CA") : ""
               }
               min={!checked ? new Date().toLocaleDateString("en-CA") : ""}
-              name="taskDate"
+              name="task_date"
               id="taskDate"
             />
 
@@ -94,12 +117,19 @@ function CreateTask() {
               <input
                 type="checkbox"
                 id="everyDay"
-                name="everyDay"
+                name="every_day_task"
                 value={checked}
-                onChange={handleCheckChange}
+                onChange={(e) => handleCheckChange(e)}
               />
               <label htmlFor="everyDay">Mark everyday until closed</label>
             </div>
+            {formError?.taskDateErr && (
+              <ToogleComponent timeOut={2000}>
+                <FormError clsNames="bg-guardsman-red-100 text-guardsman-red-900 mt-2  rounded-md p-1 text-xs">
+                  {formError.taskDateErrMsg}
+                </FormError>
+              </ToogleComponent>
+            )}
           </div>
         </div>
         <div>
@@ -111,7 +141,7 @@ function CreateTask() {
           <div className="space-y-2">
             {taskItems.map((item, index) => {
               return (
-                <div className="space-y-1 rounded-lg border p-2">
+                <div className="space-y-1 rounded-lg border p-2" key={index}>
                   <div className="flex items-center justify-between">
                     <label htmlFor="" className="font-Pacifico">
                       Task item: {index + 1}
@@ -139,7 +169,7 @@ function CreateTask() {
                   <div className="space-y-2">
                     <Input
                       type="text"
-                      name={`itemName-${index}`}
+                      name={`itemName`}
                       key={`1${index}`}
                       placeholder="Item Name"
                       value={item.itemName}
@@ -147,10 +177,10 @@ function CreateTask() {
                     />
                     <Input
                       type="text"
-                      name={`itemDes-${index}`}
+                      name={`description`}
                       key={`2${index}`}
                       placeholder="Item Description"
-                      value={item.itemDes}
+                      value={item.description}
                       onChange={(e) => handleItemDesFormChange(e, index)}
                     />
                   </div>
@@ -162,11 +192,17 @@ function CreateTask() {
             <button
               onClick={addItem}
               className="rounded-3xl border px-2 py-1 text-sm text-waikawa-gray-600"
+              type="button"
             >
               {taskItems.length > 0 ? "Add more" : "Add item"}
             </button>
           </div>
         </div>
+        <input
+          type="hidden"
+          name="taskItems"
+          value={JSON.stringify(taskItems)}
+        />
         <div className="mt-2 flex items-center justify-center">
           <button
             type="submit"
@@ -178,6 +214,45 @@ function CreateTask() {
       </Form>
     </div>
   );
+}
+
+export async function action({ request }) {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData);
+  console.log(data);
+  const error = {};
+  if (!data.task_name) {
+    error.taskNameErr = true;
+    error.taskNameErrMsg = "Task name cannot be blank";
+  }
+  if (!data.task_desc) {
+    error.taskDescErr = true;
+    error.taskDescErrMsg = "Task description cannot be blank";
+  }
+  if (!data.every_day_task && !data.task_date) {
+    error.taskDateErr = true;
+    error.taskDateErrMsg = "Either mark it everyday or select a data please";
+  }
+
+  const taskItems = JSON.parse(data.taskItems);
+
+  if (Object.keys(error).length > 0) {
+    return error;
+  }
+
+  const task = {
+    task_name: data.task_name,
+    task_desc: data.task_desc,
+    task_date: data.every_day_task === "true" ? "2099-12-31" : data.task_date,
+    created_by: "Uday",
+    every_day_task: data.every_day_task === "true",
+    is_open: true,
+    items: taskItems.filter((item) => item.itemName.length > 0),
+  };
+
+  // If all ok, insert in DB
+  await insertTaskInDb(task);
+  return redirect(routeNames.home);
 }
 
 export default CreateTask;
