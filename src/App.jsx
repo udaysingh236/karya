@@ -15,16 +15,16 @@ import LoginUser from "./features/user/LoginUser";
 import User from "./features/user/User";
 const router = createBrowserRouter([
   {
-    path: "/v1",
+    path: "/",
     element: <AppLayout />,
     errorElement: <Error />,
     children: [
       {
-        path: "",
+        path: "/",
         element: <Home />,
         children: [
           {
-            path: "",
+            path: "/",
             element: <SearchTask />,
             loader: taskLoader,
           },
