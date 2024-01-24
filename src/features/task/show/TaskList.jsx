@@ -41,7 +41,7 @@ function TaskList({ task }) {
         </Link>
         <div className="flex gap-4 self-center">
           {task.is_open ? (
-            taskDate > currDate ? (
+            taskDate >= currDate ? (
               <Button type="secondry" onClick={handleMarkdone}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

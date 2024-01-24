@@ -8,10 +8,10 @@ import { clearTaskState } from "../task/taskSlice";
 function User() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  function handleLogout() {
+  async function handleLogout() {
     dispatch(clearUserState());
     dispatch(clearTaskState());
-    logout();
+    await logout();
     navigate(routeNames.login);
   }
   return (

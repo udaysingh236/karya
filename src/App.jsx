@@ -13,6 +13,7 @@ import Error from "./ui/Error";
 import AllTasks from "./features/task/show/AllTasks";
 import LoginUser from "./features/user/LoginUser";
 import User from "./features/user/User";
+import CreateUser from "./features/user/CreateUser";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
     path: "/login",
     element: <LoginUser />,
     errorElement: <Error />,
+  },
+  {
+    path: "/login/createAccount",
+    element: <CreateUser />,
   },
 ]);
 
