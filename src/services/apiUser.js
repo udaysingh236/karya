@@ -29,8 +29,7 @@ export async function loginWithGit() {
     provider: "github",
     options: {
       redirectTo:
-        import.meta.env.VITE_LOGIN_REDIRECT ??
-        "https://mykarya.netlify.app/login/updatePassword",
+        import.meta.env.VITE_LOGIN_REDIRECT ?? "https://mykarya.netlify.app",
     },
   });
 }
@@ -40,8 +39,7 @@ export async function loginWithGoogle() {
     provider: "google",
     options: {
       redirectTo:
-        import.meta.env.VITE_LOGIN_REDIRECT ??
-        "https://mykarya.netlify.app/login/updatePassword",
+        import.meta.env.VITE_LOGIN_REDIRECT ?? "https://mykarya.netlify.app",
       queryParams: {
         access_type: "offline",
         prompt: "consent",
