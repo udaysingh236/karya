@@ -21,13 +21,17 @@ export async function login(email, password) {
     email: email,
     password: password,
   });
-  console.log("Login error api" + JSON.stringify(error));
   return { user, session, error };
 }
 
 export async function loginWithGit() {
   await supabase.auth.signInWithOAuth({
     provider: "github",
+    options: {
+      redirectTo:
+        import.meta.env.VITE_LOGIN_REDIRECT ??
+        "https://mykarya.netlify.app/login/updatePassword",
+    },
   });
 }
 
@@ -35,6 +39,9 @@ export async function loginWithGoogle() {
   await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
+      redirectTo:
+        import.meta.env.VITE_LOGIN_REDIRECT ??
+        "https://mykarya.netlify.app/login/updatePassword",
       queryParams: {
         access_type: "offline",
         prompt: "consent",

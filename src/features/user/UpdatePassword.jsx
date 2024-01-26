@@ -71,7 +71,6 @@ function UpdatePassword() {
 export async function action({ request }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
-  console.log(JSON.stringify(data));
   const error = {};
 
   if (data.pass !== data.cnfPass) {

@@ -24,7 +24,6 @@ function LoginUser() {
   const [formError, setFormError] = useState({ isError: false, errMsg: "" });
   const [isForgetPass, setIsForgetPass] = useState(false);
   const isSubmitting = navigation.state === "submitting";
-  console.log(JSON.stringify(navigation));
   async function handleFormSubmit(e) {
     e.preventDefault();
     if (!checkPassword(password)) {

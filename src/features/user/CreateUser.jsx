@@ -16,7 +16,6 @@ function CreateUser() {
   const navigation = useNavigation();
   const navigate = useNavigate();
   const isSubmitting = navigation.state === "submitting";
-  console.log("navigation" + JSON.stringify(navigation));
   useEffect(() => {
     if (formError) {
       setIsFormError(true);

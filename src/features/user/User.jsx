@@ -16,7 +16,7 @@ function User() {
     navigate(routeNames.login);
   }
   return (
-    <div className="mt-6">
+    <div className="mt-6 flex flex-col items-center justify-center">
       <div className="flex gap-2">
         <span>Name: </span>
         <p className="font-medium">{userName}</p>
@@ -25,12 +25,18 @@ function User() {
         <span>Email: </span>
         <p className="font-medium">{email}</p>
       </div>
-      <div className="mt-6 flex items-center justify-center">
+      <div className="mt-6 flex flex-col items-center justify-center gap-2">
         <button
-          className="rounded-3xl bg-portage-700  px-3 py-2 text-lg text-waikawa-gray-50"
+          className=" rounded-3xl bg-portage-600 px-3 py-2  text-lg text-waikawa-gray-50 transition-all duration-300 hover:cursor-pointer hover:bg-portage-800"
           onClick={handleLogout}
         >
           Logout
+        </button>
+        <button
+          className=" rounded-3xl bg-portage-600 px-3 py-2  text-lg text-waikawa-gray-50 transition-all duration-300 hover:cursor-pointer hover:bg-portage-800"
+          onClick={() => navigate(routeNames.forgotPass)}
+        >
+          Update Password
         </button>
       </div>
     </div>
