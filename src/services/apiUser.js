@@ -45,7 +45,7 @@ export async function loginWithGoogle() {
 
 export async function forgetPassword(email) {
   await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: "http://localhost:5173/login/updatePassword",
+    redirectTo: import.meta.env.VITE_UPDATE_PASS_REDIRECT,
   });
 }
 
