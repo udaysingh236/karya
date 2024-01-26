@@ -1,12 +1,13 @@
 import { Outlet } from "react-router-dom";
 import CreateTaskHome from "../features/task/create/CreateTaskHome";
 import { useSelector } from "react-redux";
+import { capitalizeFirstLetter } from "../utils/helpers";
 function Home() {
   const userName = useSelector((state) => state.user.userName);
   return (
     <div className="my-2">
       <h1 className="text-xl font-semibold text-portage-950">
-        Hello, {userName}
+        Hello, {capitalizeFirstLetter(userName)}
       </h1>
       <p className="text-base">What are you going to do ?</p>
       <div className="mb-4 mt-2">

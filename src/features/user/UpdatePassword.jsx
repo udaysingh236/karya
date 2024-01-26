@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
+import {
+  Form,
+  redirect,
+  useActionData,
+  useNavigate,
+  useNavigation,
+} from "react-router-dom";
 import FormLoader from "../../ui/FormLoader";
 import { checkPassword } from "../../utils/validate";
 import { updatePassword } from "../../services/apiUser";
@@ -9,6 +15,7 @@ function UpdatePassword() {
   const [isFormError, setIsFormError] = useState(false);
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
+  const navigate = useNavigate();
   useEffect(() => {
     if (formError) {
       setIsFormError(true);
@@ -54,12 +61,19 @@ function UpdatePassword() {
               onChange={() => setIsFormError(false)}
             />
           </div>
-          <div className="mt-10 flex items-center justify-center gap-6">
+          <div className="mt-10 flex items-center justify-evenly">
             <button
               type="submit"
-              className="w-full rounded-3xl bg-portage-600 px-2 py-1  text-lg text-waikawa-gray-50 transition-all duration-300 hover:cursor-pointer hover:bg-portage-800"
+              className="rounded-3xl bg-portage-600 px-3 py-2  text-lg text-waikawa-gray-50 transition-all duration-300 hover:cursor-pointer hover:bg-portage-800"
             >
               {isSubmitting ? "Updating" : "Update Password"}
+            </button>
+            <button
+              type="button"
+              className="rounded-3xl bg-portage-600 px-3 py-2  text-lg text-waikawa-gray-50 transition-all duration-300 hover:cursor-pointer hover:bg-portage-800"
+              onClick={() => navigate(-1)}
+            >
+              Cancel
             </button>
           </div>
         </Form>
