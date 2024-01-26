@@ -45,7 +45,9 @@ export async function loginWithGoogle() {
 
 export async function forgetPassword(email) {
   await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: import.meta.env.VITE_UPDATE_PASS_REDIRECT,
+    redirectTo:
+      import.meta.env.VITE_UPDATE_PASS_REDIRECT ??
+      "https://mykarya.netlify.app/login/updatePassword",
   });
 }
 
