@@ -75,8 +75,8 @@ function LoginUser() {
       });
       return;
     }
-    await forgetPassword(email);
     setIsForgetPass(true);
+    await forgetPassword(email);
   }
 
   return (
@@ -101,10 +101,31 @@ function LoginUser() {
           </p>
         )}
         {isForgetPass && (
-          <p className="rounded-lg border border-portage-300 bg-portage-50 px-2 py-1 text-sm">
-            Password recovery link has been sent to your Email (If it is
-            registered with us). <br /> Please check your mail box
-          </p>
+          <div className="flex items-center justify-center gap-2 rounded-lg border border-portage-300 bg-portage-50 px-2 py-1 text-sm">
+            <p className="">
+              Password recovery link has been sent to your Email (If it is
+              registered with us). <br /> Please check your mail box
+            </p>
+            <button
+              className="self-start rounded-full bg-guardsman-red-200 p-1"
+              onClick={() => setIsForgetPass(false)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="h-4 w-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18 18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
         )}
       </div>
       <div className="divide-y divide-portage-200 self-start rounded-xl px-4 py-6 shadow-md">
