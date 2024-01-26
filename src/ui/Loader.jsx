@@ -1,6 +1,6 @@
 function Loader() {
   return (
-    <div className="mt-12 flex items-center justify-center gap-2 text-center">
+    <div className="bg-slate-200/20 absolute inset-0 flex items-center justify-center gap-2 text-center backdrop-blur-sm">
       <div role="status">
         <svg
           aria-hidden="true"

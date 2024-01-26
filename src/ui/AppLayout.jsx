@@ -18,24 +18,23 @@ function AppLayout() {
   const isLoading = navigation.state === "loading";
   useEffect(() => {
     async function getSessionInfo() {
-      console.log("in useeffect");
       const {
-        data: { session },
+        data: { user },
         error,
-      } = await supabase.auth.getSession();
-      if (error || !session) {
+      } = await supabase.auth.getUser();
+      if (error || !user) {
         navigate(routeNames.login);
       } else {
         dispatch(updateAuthnticate(true));
-        dispatch(insertEmail(session.user.email));
-        dispatch(insertUserName(session.user.user_metadata.displayName));
+        dispatch(insertEmail(user.email));
+        dispatch(insertUserName(user.user_metadata.name));
       }
     }
     getSessionInfo();
   }, [dispatch, navigate]);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   return isAuthenticated ? (
-    <div className="mx-auto grid h-dvh  max-w-md grid-rows-[auto_1fr_auto]  bg-gradient-to-b from-waikawa-gray-100 to-waikawa-gray-50 p-4 transition-all delay-300 ease-in-out">
+    <div className="mx-auto grid h-dvh  max-w-md grid-rows-[auto_1fr_auto]  bg-gradient-to-b from-waikawa-gray-100 to-waikawa-gray-50 p-4 transition-all duration-300 ease-in-out">
       <Header />
       <div className="overflow-scroll">
         <main>

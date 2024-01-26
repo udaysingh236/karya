@@ -1,5 +1,18 @@
 import supabase from "./supabase";
 
+export async function signUpUser(email, password, userName) {
+  await supabase.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+      data: {
+        name: userName,
+        displayName: userName,
+      },
+    },
+  });
+}
+
 export async function login(email, password) {
   const {
     data: { user, session },
@@ -8,8 +21,38 @@ export async function login(email, password) {
     email: email,
     password: password,
   });
-  console.log(JSON.stringify(error));
+  console.log("Login error api" + JSON.stringify(error));
   return { user, session, error };
+}
+
+export async function loginWithGit() {
+  await supabase.auth.signInWithOAuth({
+    provider: "github",
+  });
+}
+
+export async function loginWithGoogle() {
+  await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      queryParams: {
+        access_type: "offline",
+        prompt: "consent",
+      },
+    },
+  });
+}
+
+export async function forgetPassword(email) {
+  await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: "http://localhost:5173/login/updatePassword",
+  });
+}
+
+export async function updatePassword(pass) {
+  await supabase.auth.updateUser({
+    password: pass,
+  });
 }
 
 export async function logout() {

@@ -8,12 +8,16 @@ import { loader as taskLoader } from "./features/task/show/SearchTask";
 import { loader as allTaskLoader } from "./features/task/show/AllTasks";
 import { action as createTaskAction } from "./features/task/create/CreateTask";
 import { action as updateTaskAction } from "./features/task/create/UpdateTask";
+import { action as createUserAction } from "./features/user/CreateUser";
+import { action as updatePasswordAction } from "./features/user/UpdatePassword";
+
 import Home from "./ui/Home";
 import Error from "./ui/Error";
 import AllTasks from "./features/task/show/AllTasks";
 import LoginUser from "./features/user/LoginUser";
 import User from "./features/user/User";
 import CreateUser from "./features/user/CreateUser";
+import UpdatePassword from "./features/user/UpdatePassword";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -64,6 +68,12 @@ const router = createBrowserRouter([
   {
     path: "/login/createAccount",
     element: <CreateUser />,
+    action: createUserAction,
+  },
+  {
+    path: "/login/updatePassword",
+    element: <UpdatePassword />,
+    action: updatePasswordAction,
   },
 ]);
 

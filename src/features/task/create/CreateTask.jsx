@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, redirect, useActionData } from "react-router-dom";
+import { Form, redirect, useActionData, useNavigate } from "react-router-dom";
 import Input from "../../../ui/Input";
 import { useSelector } from "react-redux";
 import FormError from "../../../ui/FormError";
@@ -8,6 +8,7 @@ import { insertTaskInDb } from "../../../services/apiTask";
 import { routeNames } from "../../../utils/RouteNames";
 
 function CreateTask() {
+  const navigate = useNavigate();
   const [taskItems, setTaskItems] = useState([
     { itemName: "", description: "" },
   ]);
@@ -203,12 +204,21 @@ function CreateTask() {
           name="taskItems"
           value={JSON.stringify(taskItems)}
         />
-        <div className="mt-2 flex items-center justify-center">
+        <div className="mt-2 flex items-center justify-center gap-6">
           <button
             type="submit"
             className="rounded-3xl bg-portage-700  px-2 py-1 text-lg text-waikawa-gray-50"
           >
-            Submit
+            Create
+          </button>
+          <button
+            type="button"
+            className="rounded-3xl bg-portage-950  px-2 py-1 text-lg text-waikawa-gray-50"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            Cancel
           </button>
         </div>
       </Form>

@@ -6,7 +6,7 @@ export const routeNames = {
   updateTask: "/tasks/update/",
   userProfile: "/user",
   login: "/login",
-  forgotPass: "/login/forgotPass",
+  forgotPass: "/login/updatePassword",
   createAccount: "/login/createAccount",
   logout: "/logout",
 };

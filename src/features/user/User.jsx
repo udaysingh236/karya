@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearUserState } from "./userSlice";
 import { useNavigate } from "react-router-dom";
 import { routeNames } from "../../utils/RouteNames";
@@ -8,6 +8,7 @@ import { clearTaskState } from "../task/taskSlice";
 function User() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { userName, email } = useSelector((state) => state.user);
   async function handleLogout() {
     dispatch(clearUserState());
     dispatch(clearTaskState());
@@ -18,11 +19,11 @@ function User() {
     <div className="mt-6">
       <div className="flex gap-2">
         <span>Name: </span>
-        <p className="font-medium">Uday</p>
+        <p className="font-medium">{userName}</p>
       </div>
       <div className="flex gap-2">
         <span>Email: </span>
-        <p className="font-medium">udaysingh236@gmail.com</p>
+        <p className="font-medium">{email}</p>
       </div>
       <div className="mt-6 flex items-center justify-center">
         <button
