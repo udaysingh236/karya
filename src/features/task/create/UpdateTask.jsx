@@ -132,6 +132,7 @@ function UpdateTask() {
                     <button
                       onClick={() => removeItem(index)}
                       className=" rounded-md border-2 border-waikawa-gray-700  px-1 py-1 text-sm text-waikawa-gray-700"
+                      type="button"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
